@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Metas -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="keywords" content="HTML5 Template Iteck Multi-Purpose themeforest" />
+    <meta name="description" content="Iteck - Multi-Purpose HTML5 Template" />
+    <meta name="author" content="" />
+
+     <!-- Title  -->
+   <title>CPE : Le blog spécialisé dans les concours de pronostics</title>
+
+   <!-- Favicon -->
+   <link rel="shortcut icon" href="assets/img/logo.png" title="Favicon" sizes="16x16" />
+
+    <!-- bootstrap 5 -->
+    <link rel="stylesheet" href="assets/css/lib/bootstrap.min.css">
+
+    <!-- font family -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- ionicons icons  -->
+    <link rel="stylesheet" href="assets/css/lib/ionicons.css">
+    <!-- line-awesome icons  -->
+    <link rel="stylesheet" href="assets/css/lib/line-awesome.css">
+    <!-- animate css  -->
+    <link rel="stylesheet" href="assets/css/lib/animate.css" />
+    <!-- fancybox popup  -->
+    <link rel="stylesheet" href="assets/css/lib/jquery.fancybox.css" />
+    <!-- lity popup  -->
+    <link rel="stylesheet" href="assets/css/lib/lity.css" />
+    <!-- swiper slider  -->
+    <link rel="stylesheet" href="assets/css/lib/swiper.min.css" />
+
+    <!-- ====== main style ====== -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <title> Newzin </title>
+</head>
+
+<body class="home-style1 tc-single-post-creative-page">
+
+    <!-- ====== start loading page ====== -->
+    <div id="preloader">
+    </div>
+    <!-- ====== end loading page ====== -->
+
+     <!-- ====== start navbar-container ====== -->
+     <div class="navbar-container">
+        <div class="container">
+           <!-- ====== start top navbar ====== -->
+<div class="top-navbar style-1">
+<div class="container p-0">
+    <div class="row align-items-center">
+        <div class="col-lg-4">
+            <div class="date-weather mb-3 mb-lg-0">
+                <div class="row align-items-center">
+                    <div class="col-6">
+                        <div class="item">
+                            <div class="icon me-3 pt-1">
+                                <i class="la la-calendar"></i>
+                            </div>
+                            <div class="inf">
+                                <strong id="current-date">Lundi</strong> <!-- Date actuelle mise à jour ici -->
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="item" id="weather-info">
+                            <!-- Les informations météorologiques seront mises à jour ici -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <a href="index.html" target="_blank" class="logo-brand d-none d-lg-block">
+                <img src="assets/img/logo.png" class="dark-none">
+                <img src="assets/img/logo2.png" alt="" class="light-none">
+            </a>
+        </div>
+        <div class="col-lg-4">
+            <div class="sub-darkLight">
+                <div class="row text-end align-items-center">
+                    <div class="col-6">
+                        <a href="https://ccup.io/commander" target="_blank" class="text-uppercase fs-6 border-bottom border-1 border-dark">
+                            <i class="fas fa-dollar-sign fs-5 me-1"></i>
+                            un devis ?
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <div class="darkLight-btn">
+                            <span class="icon active" id="light-icon">
+                                <i class="la la-sun"></i>
+                            </span>
+                            <span class="icon" id="dark-icon">
+                                <i class="la la-moon"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Code du calendrier -->
+<div id="calendar"></div>
+
+<!-- Code des informations météorologiques -->
+<div class="col-6">
+<div class="item" id="weather-info">
+    <!-- Les informations météorologiques seront mises à jour ici -->
+</div>
+</div>
+
+<!-- Scripts pour le calendrier et les informations météorologiques -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js"></script>
+<script>
+function updateCurrentDate() {
+const currentDateElement = document.getElementById('current-date');
+const today = new Date(); // Obtenir la date et l'heure actuelles
+const options = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' };
+currentDateElement.textContent = today.toLocaleDateString('fr-FR', options);
+}
+
+// Appel initial pour mettre à jour la date
+updateCurrentDate();
+
+// Mise à jour de la date chaque jour à minuit (00:00:00)
+function setDailyUpdate() {
+const now = new Date();
+const timeUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) - now;
+setTimeout(function() {
+    updateCurrentDate();
+    setDailyUpdate(); // Répéter pour le prochain jour
+}, timeUntilMidnight);
+}
+
+setDailyUpdate(); // Démarrer la mise à jour quotidienne
+
+function fetchWeather() {
+const apiKey = 'd0e7851a2ef56e995b3676226ba79eef';
+const city = 'Paris';
+const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+        const temperature = data.main.temp;
+        const conditions = data.weather[0].description;
+
+        const weatherInfoElement = document.getElementById('weather-info');
+        weatherInfoElement.innerHTML = `
+            <div class="icon me-3 pt-1">
+                <i class="la la-cloud-sun"></i>
+            </div>
+            <div class="inf">
+                <strong>${temperature}°, ${conditions}</strong>
+                <p>${city}</p>
+            </div>
+        `;
+    })
+    .catch(error => {
+        console.error('Erreur lors de la récupération des données météo', error);
+    });
+}
+
+// Rafraîchir toutes les 10 minutes (600000 ms)
+setInterval(fetchWeather, 600000);
+
+// Appel initial
+fetchWeather();
+</script>
+<!-- ====== end top navbar ====== -->
+
+
+
+            <!-- ====== start navbar ====== -->
+            <nav class="navbar navbar-expand-lg navbar-light style-1">
+                <div class="container p-0">
+                    <div class="mob-nav-toggles d-flex align-items-center justify-content-between">
+                        <button class="navbarList-icon me-lg-5" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+                        aria-controls="offcanvasExample">
+                            <span></span>
+                            <span></span>
+                        </button>
+                        <a href="#" class="logo-brand d-block d-lg-none w-50 my-4">
+                            <img src="assets/img/logo_home1.png" alt="" class="dark-none">
+                            <img src="assets/img/logo_home1_lt.png" alt="" class="light-none">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item dropdown">
+                                <a href="index.html" target="_blank" class="nav-link">
+                                    accueil
+                                </a>
+                                
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="page-blog-2.html" target="_blank" class="nav-link">
+                                    Blog
+                                </a>
+                                
+                            </li>
+                            
+                            <li class="nav-item dropdown">
+                                <a href="page-about.html" target="_blank" class="nav-link">
+                                    À propos
+                                </a>
+                                
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="page-contact.html">
+                                    contact
+                                </a>
+                            </li>
+                            
+                        </ul>
+                        
+                    </div>
+                </div>
+            </nav>
+            <!-- ====== end navbar ====== -->
+
+            
+        </div>
+    </div>
+    <!-- ====== start navbar-container ====== -->
+
+
+    <!--Contents-->
+    <main>
+
+        <!-- ====== start tc-main-post-style1 ====== -->
+        <section class="tc-main-post-style1 pb-60">
+            <div class="container">
+                <div class="tc-main-post-title pt-40 pb-40">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <p class="text-uppercase mb-15">Sport</p>
+                            <h2 class="title">Neymar rejoint Al-Hilal Football Club en Arabie Saoudite</h2>
+                           
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tc-main-post-img img-cover mb-50">
+                    <img src="assets/img/neymar_article.png" alt="">
+                </div>
+                <div class="tc-main-post-content color-000">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <div class="sharing">
+                                
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <h4 class="sub-title sm-content-width">
+                                Dans un transfert qui a secoué le monde du football, Neymar, l'une des plus grandes stars du sport, a officiellement rejoint Al-Hilal Football Club en Arabie saoudite.
+                                <p class="info-text sm-content-width mt-40">
+                                <span class="lg-letter">
+                                   c 
+                                </span>
+                                e transfert marque une nouvelle ère dans la carrière du joueur brésilien et souligne la montée en puissance du football au Moyen-Orient.</p>
+                            <h4 class="sub-title sm-content-width mt-40">
+                                Nouveau défi, nouvelle destination
+                            </h4>
+                            <h6 class="sub-title sm-content-width mt-30">
+                                Après plusieurs années passées au Paris Saint-Germain (PSG), Neymar a décidé de relever un nouveau défi en signant un contrat avec Al-Hilal, l'un des clubs les plus prestigieux d'Arabie saoudite. Le transfert a été annoncé lors d'une conférence de presse à Riyad, la capitale saoudienne, où Neymar a exprimé son enthousiasme à l'idée de rejoindre le club.</h6>
+                            <div class="info-text-img mt-30">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <p class="info-text">
+                                            Le départ de Neymar vers Al-Hilal a été accueilli avec surprise et intrigue par les fans de football du monde entier. Le joueur lui-même a expliqué que son choix était motivé par le désir de relever de nouveaux défis et de découvrir une culture et un environnement différents. Il a également exprimé sa gratitude envers le PSG pour les années passées au club. Pour Al-Hilal, l'arrivée de Neymar est un coup de maître qui devrait renforcer considérablement l'équipe sur la scène nationale et internationale. Le club a une histoire riche et a remporté de nombreux titres, mais l'ajout de Neymar lui donne une visibilité mondiale accrue et devrait attirer de nouveaux fans et sponsors.</p>
+                                    </div>
+                                    <div class="col-lg-5">
+                                       <a href="https://ccup.io"> <div class="img img-cover th-280 mt-15">
+                                            <img src="assets/img/banniere6.png" alt="">
+                                        </div>
+                                    </a>
+                                        <div class="text-center color-999 py-3 fst-italic">
+                                            <span>Sponsored <a href="https://ccup.io" class="color-000">ccup.io</a></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                          
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <div class="quote-message-content mt-50">
+                                <div class="row">
+                                    <div class="col-lg-7">
+                                        <div class="quote-message">
+                                            <div class="icon">
+                                                <img src="assets/img/quote.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <h3>"Un nouveau chapitre passionnant commence maintenant."  </h3>
+                                                <p class="color-999 mt-20"> <strong class="color-000"> Neymar JR </strong></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-5">
+                                        <div class="content-info">
+                                            <h5 class="sub-title sm-content-width mb-20">
+                                                Un renforcement majeur
+                                            </h5>
+                                            <p class="info-text">
+                                                En conclusion, le transfert de Neymar à Al-Hilal Football Club en Arabie saoudite est un événement majeur pour le football mondial. Il témoigne de la capacité du Moyen-Orient à attirer les plus grandes stars du football et à jouer un rôle de premier plan sur la scène internationale. Les fans du monde entier seront impatients de voir comment Neymar s'adapte à son nouveau club et de suivre sa carrière dans cette nouvelle aventure passionnante. </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-10 offset-lg-2">
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end tc-main-post-style ====== -->
+
+        <!-- ====== start banner18 ====== -->
+        <section class="banner18">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="content border-1 border-top border-bottom brd-gray pt-50 pb-50">
+                            <a href="https://ccup.io" class="d-block img-cover">
+                                <img src="assets/img/Artboard Copy 11.jpg" alt="">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end banner18 ====== -->
+
+        <!-- ====== start video content ====== -->
+        <section class="tc-main-post-style1 pt-60 pb-60">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="tc-main-post-content">
+                          
+                           
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end video content ====== -->
+
+
+
+
+        <!-- ====== start another posts ====== -->
+        <section class="another-news">
+            <div class="container">
+                <div class="content pt-50 pb-50 border-1 border-top border-dark">
+                    <div class="row">
+                        <div class="col-lg-4 mb-5 mb-lg-0">
+                            <a href="analyse-du-combat-explosif-entre-khamzat-chimaev-et-paulo-costa.html" class="color-000 text-uppercase mb-30 ltspc-1"> voir plus <i class="la la-angle-right ms-1"></i> </a>
+                            <div class="row">
+                                <div class="col-12 border-1 border-end brd-gray">
+                                    <div class="tc-post-grid-default">
+                                        <div class="item">
+                                            <div class="img img-cover th-250">
+                                                <img src="assets/img/ufc3.png" alt="">
+                                            </div>
+                                            <div class="content pt-20">
+                                                <a href="#" class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</a>
+                                                <h4 class="title ltspc--1 mb-10">
+                                                    <a href="analyse-du-combat-explosif-entre-khamzat-chimaev-et-paulo-costa.html">
+                                                        Analyse du combat explosif entre Khamzat Chimaev et Paulo Costa
+                                                    </a>
+                                                </h4>
+                                                <div class="text color-666">
+                                                    
+                                                    Les fans du MMA attendent avec impatience ce combat entre le suédois aux racines tchétchènes et le brésilien au style explosif [...]
+                                                </div>
+                                                <div class="meta-bot lh-1 mt-20">
+                                                    <ul class="d-flex">
+                                                        <li class="date me-5">
+                                                            <a href="#"><i class="la la-calendar me-2"></i> Dec 14,
+                                                                2022</a>
+                                                        </li>
+                                                        <li class="comment">
+                                                            <a href="#"><i class="la la-comment me-2"></i> 7</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tc-post-list-style2">
+                                        <div class="items">
+                                            <a href="tournoi-de-golf.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
+                                                <div class="row gx-3 align-items-center">
+                                                    <div class="col-4">
+                                                        <div class="img th-70 img-cover">
+                                                            <img src="assets/img/golf.png" alt="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div class="content">
+                                                            <small class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</small>
+                                                            <h5 class="title ltspc--1">
+                                                               Tournoi de golf
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a href="kylian-mbappe-quitte-le-psg.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
+                                                <div class="row gx-3 align-items-center">
+                                                    <div class="col-4">
+                                                        <div class="img th-70 img-cover">
+                                                            <img src="assets/img/mercato.png" alt="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div class="content">
+                                                            <small class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</small>
+                                                            <h5 class="title ltspc--1">
+                                                                Kylian quitte le psg 
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 mb-5 mb-lg-0">
+                            <a href="le-duel-epique-entre-islam-makhachev-et-charles-oliveira.html" class="color-000 text-uppercase mb-30 ltspc-1"> voir plus <i class="la la-angle-right ms-1"></i> </a>
+                            <div class="row">
+                                <div class="col-12 border-1 border-end brd-gray">
+                                    <div class="tc-post-grid-default">
+                                        <div class="item">
+                                            <div class="img img-cover th-250">
+                                                <img src="assets/img/islam.png" alt="">
+                                            </div>
+                                            <div class="content pt-20">
+                                                <a href="#" class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</a>
+                                                <h4 class="title ltspc--1 mb-10">
+                                                    <a href="le-duel-epique-entre-islam-makhachev-et-charles-oliveira.html">
+                                                        Le duel épique entre Islam Makhachev et Charles Oliveira
+                                                    </a>
+                                                </h4>
+                                                <div class="text color-666">
+                                                    Le monde des arts martiaux mixtes (MMA) est sur le point de s'embraser avec l'annonce tant attendue du duel épique entre Islam Makhachev et Charles Oliveira [...]
+                                                </div>
+                                                <div class="meta-bot lh-1 mt-20">
+                                                    <ul class="d-flex">
+                                                        <li class="date me-5">
+                                                            <a href="#"><i class="la la-calendar me-2"></i> Dec 14,
+                                                                2022</a>
+                                                        </li>
+                                                        <li class="comment">
+                                                            <a href="#"><i class="la la-comment me-2"></i> 7</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tc-post-list-style2">
+                                        <div class="items">
+                                            <a href="previsions-de-la-cote-de-match-entre-les-lakers-et-les-nets.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
+                                                <div class="row gx-3 align-items-center">
+                                                    <div class="col-4">
+                                                        <div class="img th-70 img-cover">
+                                                            <img src="assets/img/lakers2.png" alt="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div class="content">
+                                                            <small class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</small>
+                                                            <h5 class="title ltspc--1">
+                                                                Prévisions de la cote de match entre les Lakers et les Nets
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a href="la-revolution-des-plateformes-de-pronostics-en-entreprise.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
+                                                <div class="row gx-3 align-items-center">
+                                                    <div class="col-4">
+                                                        <div class="img th-70 img-cover">
+                                                            <img src="assets/img/chirilov_article.png" alt="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div class="content">
+                                                            <small class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</small>
+                                                            <h5 class="title ltspc--1">
+                                                                La révolution des plateformes de pronostics en entreprise.
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <a href="legendes-du-rugby-et-symboles-de-la-nouvelle-zelande.html" class="color-000 text-uppercase mb-30 ltspc-1"> voir plus <i class="la la-angle-right ms-1"></i> </a>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="tc-post-grid-default">
+                                        <div class="item">
+                                            <div class="img img-cover th-250">
+                                                <img src="assets/img/allblack.jpg" alt="">
+                                            </div>
+                                            <div class="content pt-20">
+                                                <a href="#" class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</a>
+                                                <h4 class="title ltspc--1 mb-10">
+                                                    <a href="legendes-du-rugby-et-symboles-de-la-nouvelle-zelande.html">
+                                                        Légendes du rugby et symboles de la Nouvelle-Zélande
+                                                    </a>
+                                                </h4>
+                                                <div class="text color-666">
+                                                    La Nouvelle-Zélande est un pays où le rugby occupe une place particulièrement importante dans la culture et l'identité nationale [...]
+                                                </div>
+                                                <div class="meta-bot lh-1 mt-20">
+                                                    <ul class="d-flex">
+                                                        <li class="date me-5">
+                                                            <a href="#"><i class="la la-calendar me-2"></i> Dec 14,
+                                                                2022</a>
+                                                        </li>
+                                                        <li class="comment">
+                                                            <a href="#"><i class="la la-comment me-2"></i> 7</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tc-post-list-style2">
+                                        <div class="items">
+                                            <a href="disqualifiee-pour-refus-de-poignee-main-kharlan-aux-jo-paris.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 mt-15 brd-gray">
+                                                <div class="row gx-3 align-items-center">
+                                                    <div class="col-4">
+                                                        <div class="img th-70 img-cover">
+                                                            <img src="assets/img/olga_article.png" alt="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div class="content">
+                                                            <small class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</small>
+                                                            <h5 class="title ltspc--1">
+                                                                Disqualifiée pour refus de poignée main, Kharlan aux JO Paris.
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a href="championnat-du-monde-de-formule-1-2024.html" class="item d-block border-1 border-top border-bottom-0 brd-gray pt-15 brd-gray">
+                                                <div class="row gx-3 align-items-center">
+                                                    <div class="col-4">
+                                                        <div class="img th-70 img-cover">
+                                                            <img src="assets/img/evenement4.png" alt="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <div class="content">
+                                                            <small class="news-cat color-999 fsz-13px text-uppercase mb-10">sport</small>
+                                                            <h5 class="title ltspc--1">
+                                                                Championnat du monde de Formule 1 2024
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== start another posts ====== -->
+
+
+       
+        <!-- ====== end comments ====== -->
+
+
+        <!-- ====== start modals ====== -->
+
+        <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
+            aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <div class="logo">
+                    <img src="assets/img/logo_home1.png" alt="" class="dark-none">
+                    <img src="assets/img/logo_home1_lt.png" alt="" class="light-none">
+                </div>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body mt-4">
+                <h6 class="color-000 text-uppercase mb-15 ltspc-1"> about us <i class="la la-angle-right ms-1"></i> </h6>
+                <div class="text">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem optio tempora quia iure quae. Soluta corporis quidem aperiam amet nihil.
+                </div>
+
+                <div class="sidebar-categories mt-40">
+                    <h6 class="color-000 text-uppercase mb-30 ltspc-1"> categories <i class="la la-angle-right ms-1"></i> </h6>
+                    <a href="#" class="cat-card">
+                        <div class="img img-cover">
+                            <img src="assets/img/bussines/1.png" alt="">
+                        </div>
+                        <div class="info">
+                            <h5>bussines</h5>
+                            <span class="num">12</span>
+                        </div>
+                    </a>
+                    <a href="#" class="cat-card">
+                        <div class="img img-cover">
+                            <img src="assets/img/trend/3.png" alt="">
+                        </div>
+                        <div class="info">
+                            <h5>technology</h5>
+                            <span class="num">14</span>
+                        </div>
+                    </a>
+                    <a href="#" class="cat-card">
+                        <div class="img img-cover">
+                            <img src="assets/img/must_read/3.png" alt="">
+                        </div>
+                        <div class="info">
+                            <h5>culture</h5>
+                            <span class="num">20</span>
+                        </div>
+                    </a>
+                    <a href="#" class="cat-card">
+                        <div class="img img-cover">
+                            <img src="assets/img/videos/1.png" alt="">
+                        </div>
+                        <div class="info">
+                            <h5>videos</h5>
+                            <span class="num">14</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="sidebar-contact-info mt-50">
+                    <h6 class="color-000 text-uppercase mb-20 ltspc-1"> Contact & follow <i class="la la-angle-right ms-1"></i> </h6>
+                    <ul class="m-0">
+                        <li class="mb-3">
+                            <i class="las la-map-marker me-2 color-main fs-5"></i>
+                            <a href="#">streat name 12, hollywood City, USA</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="las la-envelope me-2 color-main fs-5"></i>
+                            <a href="#">Newzin@gmail.com</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="las la-phone-volume me-2 color-main fs-5"></i>
+                            <a href="#">+12 123 456 789</a>
+                        </li>
+                    </ul>
+                    <div class="social-links">
+                        <a href="#">
+                            <i class="la la-twitter"></i>
+                        </a>
+                        <a href="#">
+                            <i class="la la-facebook-f"></i>
+                        </a>
+                        <a href="#">
+                            <i class="la la-instagram"></i>
+                        </a>
+                        <a href="#">
+                            <i class="la la-youtube"></i>
+                        </a>
+                        <a href="#">
+                            <i class="la la-spotify"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ====== end modals ====== -->
+
+    </main>
+    <!--End-Contents-->
+
+    <!-- ====== start footer ====== -->
+    <footer class="footer-style8">
+        <div class="container">
+            <div class="tc-subscribe-style8 border-1 border-bottom brd-light">
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-lg-4">
+                        <div class="sub-info">
+                            <h5>Explorez le monde du sport avec nous, une étape à la fois.</h5>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="sub-form">
+                            <div class="form-group">
+                                <span class="icon">
+                                    <i class="la la-envelope"></i>
+                                </span>
+                                <input type="text" class="form-control" placeholder="Entrez votre adresse e-mail.">
+                                <button>s'abonner</button>
+                            </div>
+                            <p class="mt-2 text-white fsz-13px fst-italic">En vous abonnant, vous acceptez notre politique de confidentialité. <a
+                                    href="#" class="text-decoration-underline fst-normal text-white">Politique</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="row gx-lg-5">
+                    <div class="col-lg-4">
+                        <div class="info">
+                            <div class="foot-logo">
+                                <img src="assets/img/logo2.png" alt="">
+                            </div>
+                            <div class="data-info">
+                                <p>
+                                    <b>Opéré par : </b> Société Iterar Network, Inc.
+                                </p>
+                                <p>
+                                    <b> Siret: </b> 88157171500013
+                                </p>
+                                <p>
+                                    <b> Adresse: </b> Avenue Charles de Gaulle, <br> 92200 Neuilly-sur-Seine
+                                </p>
+                                <p>
+                                    <b> Email : </b> contact@iterar.net
+                                </p>
+                                <p>
+                                    <b> Tél : </b> +33 1 83 79 24 54
+                                </p>
+     
+                            </div>
+
+                            <div class="social-links">
+                                <a href="https://twitter.com/ccup_io" target="_blank">
+                                    <i class="la la-twitter"></i>
+                                </a>
+                                <a href="https://www.facebook.com/ccup.io" target="_blank">
+                                    <i class="la la-facebook-f"></i>
+                                </a>
+                                <a href="https://www.instagram.com/ccup.io/" target="_blank">
+                                    <i class="la la-instagram"></i>
+                                </a>
+                                <a href="https://www.youtube.com/@ccupio" target="_blank">
+                                    <i class="la la-youtube"></i>
+                                </a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Navigation</div>
+                            <ul>
+                                <li>
+                                    <a href="#" class="f-link">Accueil</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Blog</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">À Propos</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Contact</a>
+                                </li>
+                        
+                            </ul>
+                        </div>
+               
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Tendances Actuelle</div>
+                            <ul>
+                                <li>
+                                    <a href="#" class="f-link">Pronostics</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Analyse</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Compétition</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Challenges</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Résultats</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Événements</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Communauté</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Victoires et Récompenses</a>
+                                </li>
+                            </ul>
+                        </div>
+                 
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Sport</div>
+                            <ul>
+                                <li>
+                                    <a href="#" class="f-link">Football</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Rugby</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">MMA</a>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Aide</div>
+                            <ul>
+                                <li>
+                                    <a href="#" class="f-link">Contact</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">LA communauté</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Confidentialité</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Politique</a>
+                                </li>
+                     
+                            </ul>
+                        </div>
+                        <div class="link-group">
+                         
+                    </div>
+                </div>
+            </div>
+
+            <div class="foot text-center pt-40 pb-40 border-1 border-top brd-light">
+                <p class="fsz-13px">© 2023 Droits d'auteur <a href="#" class="text-white hover-underline">Concours Pronostics Entreprise</a>. Tous droits réservés. Développé par Iterar Network.
+                     <a href="#" class="text-white hover-underline">Iterar Network</a></p>
+            </div>
+        <!-- ====== start to top button ====== -->
+        <a href="#" class="to_top">
+            <i class="la la-angle-up"></i>
+        </a>
+        <!-- ====== end to top button ====== -->
+    </footer>
+    <!-- ====== end footer ====== -->
+
+    <!-- ====== start to top button ====== -->
+    <!-- <div class="progress-wrap">
+        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102"><path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 220.587;"></path></svg>
+    </div> -->
+    <!-- ====== end to top button ====== -->
+
+    <!-- ====== request ====== -->
+    <script src="assets/js/lib/jquery-3.0.0.min.js"></script>
+    <script src="assets/js/lib/jquery-migrate-3.0.0.min.js"></script>
+    <script src="assets/js/lib/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/lib/wow.min.js"></script>
+    <script src="assets/js/lib/jquery.fancybox.js"></script>
+    <script src="assets/js/lib/lity.js"></script>
+    <script src="assets/js/lib/swiper.min.js"></script>
+    <script src="assets/js/lib/jquery.waypoints.min.js"></script>
+    <script src="assets/js/lib/jquery.counterup.js"></script>
+    <script src="assets/js/lib/pace.js"></script>
+    <script src="assets/js/lib/back-to-top.js"></script>
+    <script src="assets/js/lib/parallaxie.js"></script>
+    <script src="assets/js/main.js"></script>
+
+
+</body>
+
+</html>

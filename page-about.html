@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Metas -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="keywords" content="HTML5 Template Iteck Multi-Purpose themeforest" />
+    <meta name="description" content="Iteck - Multi-Purpose HTML5 Template" />
+    <meta name="author" content="" />
+
+    <head>
+        <!-- Metas -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta name="keywords" content="HTML5 Template Iteck Multi-Purpose themeforest" />
+        <meta name="description" content="Iteck - Multi-Purpose HTML5 Template" />
+        <meta name="author" content="" />
+    
+        <!-- Title  -->
+        <title>CPE : Le blog spécialisé dans les concours de pronostics</title>
+    
+        <!-- Favicon -->
+        <link rel="shortcut icon" href="assets/img/logo.png" title="Favicon" sizes="16x16" />
+    
+        <!-- bootstrap 5 -->
+        <link rel="stylesheet" href="assets/css/lib/bootstrap.min.css">
+    
+        <!-- font family -->
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+            rel="stylesheet">
+    
+        <!-- ionicons icons  -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <!-- line-awesome icons  -->
+        <link rel="stylesheet" href="assets/css/lib/line-awesome.css">
+        <!-- animate css  -->
+        <link rel="stylesheet" href="assets/css/lib/animate.css" />
+        <!-- fancybox popup  -->
+        <link rel="stylesheet" href="assets/css/lib/jquery.fancybox.css" />
+        <!-- lity popup  -->
+        <link rel="stylesheet" href="assets/css/lib/lity.css" />
+        <!-- swiper slider  -->
+        <link rel="stylesheet" href="assets/css/lib/swiper.min.css" />
+    
+        <!-- ====== main style ====== -->
+        <link rel="stylesheet" href="assets/css/style.css" />
+        <title> Newzin </title>
+    </head>
+    
+    <body class="home-style1 tc-about-page">
+    
+        <!-- ====== start loading page ====== -->
+        <div id="preloader">
+        </div>
+        <!-- ====== end loading page ====== -->
+    
+        <!-- ====== start navbar-container ====== -->
+        <div class="navbar-container">
+            <div class="container">
+               <!-- ====== start top navbar ====== -->
+<div class="top-navbar style-1">
+    <div class="container p-0">
+        <div class="row align-items-center">
+            <div class="col-lg-4">
+                <div class="date-weather mb-3 mb-lg-0">
+                    <div class="row align-items-center">
+                        <div class="col-6">
+                            <div class="item">
+                                <div class="icon me-3 pt-1">
+                                    <i class="la la-calendar"></i>
+                                </div>
+                                <div class="inf">
+                                    <strong id="current-date">Lundi</strong> <!-- Date actuelle mise à jour ici -->
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="item" id="weather-info">
+                                <!-- Les informations météorologiques seront mises à jour ici -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <a href="index.html" target="_blank" class="logo-brand d-none d-lg-block">
+                    <img src="assets/img/logo.png" class="dark-none">
+                    <img src="assets/img/logo2.png" alt="" class="light-none">
+                </a>
+            </div>
+            <div class="col-lg-4">
+                <div class="sub-darkLight">
+                    <div class="row text-end align-items-center">
+                        <div class="col-6">
+                            <a href="https://ccup.io/commander" target="_blank" class="text-uppercase fs-6 border-bottom border-1 border-dark">
+                                <i class="fas fa-dollar-sign fs-5 me-1"></i>
+                                un devis ?
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <div class="darkLight-btn">
+                                <span class="icon active" id="light-icon">
+                                    <i class="la la-sun"></i>
+                                </span>
+                                <span class="icon" id="dark-icon">
+                                    <i class="la la-moon"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Code du calendrier -->
+<div id="calendar"></div>
+
+<!-- Code des informations météorologiques -->
+<div class="col-6">
+    <div class="item" id="weather-info">
+        <!-- Les informations météorologiques seront mises à jour ici -->
+    </div>
+</div>
+
+<!-- Scripts pour le calendrier et les informations météorologiques -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js"></script>
+<script>
+function updateCurrentDate() {
+    const currentDateElement = document.getElementById('current-date');
+    const today = new Date(); // Obtenir la date et l'heure actuelles
+    const options = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' };
+    currentDateElement.textContent = today.toLocaleDateString('fr-FR', options);
+}
+
+// Appel initial pour mettre à jour la date
+updateCurrentDate();
+
+// Mise à jour de la date chaque jour à minuit (00:00:00)
+function setDailyUpdate() {
+    const now = new Date();
+    const timeUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) - now;
+    setTimeout(function() {
+        updateCurrentDate();
+        setDailyUpdate(); // Répéter pour le prochain jour
+    }, timeUntilMidnight);
+}
+
+setDailyUpdate(); // Démarrer la mise à jour quotidienne
+
+function fetchWeather() {
+    const apiKey = 'd0e7851a2ef56e995b3676226ba79eef';
+    const city = 'Paris';
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            const temperature = data.main.temp;
+            const conditions = data.weather[0].description;
+
+            const weatherInfoElement = document.getElementById('weather-info');
+            weatherInfoElement.innerHTML = `
+                <div class="icon me-3 pt-1">
+                    <i class="la la-cloud-sun"></i>
+                </div>
+                <div class="inf">
+                    <strong>${temperature}°, ${conditions}</strong>
+                    <p>${city}</p>
+                </div>
+            `;
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des données météo', error);
+        });
+}
+
+// Rafraîchir toutes les 10 minutes (600000 ms)
+setInterval(fetchWeather, 600000);
+
+// Appel initial
+fetchWeather();
+</script>
+<!-- ====== end top navbar ====== -->
+
+
+    
+                <!-- ====== start navbar ====== -->
+                <nav class="navbar navbar-expand-lg navbar-light style-1">
+                    <div class="container p-0">
+                        <div class="mob-nav-toggles d-flex align-items-center justify-content-between">
+                            <button class="navbarList-icon me-lg-5" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+                            aria-controls="offcanvasExample">
+                                <span></span>
+                                <span></span>
+                            </button>
+                            <a href="#" class="logo-brand d-block d-lg-none w-50 my-4">
+                                <img src="assets/img/logo_home1.png" alt="" class="dark-none">
+                                <img src="assets/img/logo_home1_lt.png" alt="" class="light-none">
+                            </a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </div>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item dropdown">
+                                    <a href="index.html" target="_blank" class="nav-link">
+                                        accueil
+                                    </a>
+                                    
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a href="page-blog-2.html" target="_blank" class="nav-link">
+                                        Blog
+                                    </a>
+                                    
+                                </li>
+                                
+                                <li class="nav-item dropdown">
+                                    <a href="page-about.html" target="_blank" class="nav-link">
+                                        À propos
+                                    </a>
+                                    
+                                </li>
+    
+                                <li class="nav-item">
+                                    <a class="nav-link" href="page-contact.html">
+                                        contact
+                                    </a>
+                                </li>
+                                
+                            </ul>
+                            
+                        </div>
+                    </div>
+                </nav>
+                <!-- ====== end navbar ====== -->
+    
+                
+            </div>
+        </div>
+
+
+        <!-- ====== start about-about ====== -->
+        <section class="tc-about-about">
+            <div class="container">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-lg-6">
+                        <div class="img img-cover">
+                            <img src="assets/img/about_page/entreprise.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="info mt-4 mt-lg-0">
+                            <h2 class="fsz-30px mb-40"> La révolution des concours de pronostics </h2>
+                            <div class="text fsz-14px color-666 mb-60">
+                                Plongez dans l'ère du divertissement compétitif en entreprise ! Découvrez comment nos concours de pronostics révolutionnent le jeu en stimulant l'enthousiasme et la collaboration parmi vos équipes, créant ainsi une expérience inoubliable au sein de votre entreprise. Soyez prêts à rivaliser, prédire et célébrer ensemble !
+                            </div>
+                            <a href="https://ccup.io/entreprise" target="_blank" class="butn bg-main text-white hover-shadow">
+                                <span> Voir plus </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end about-about ====== -->
+
+
+        <!-- ====== start about-vision ====== -->
+        <section class="tc-about-vision">
+            <div class="container">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-lg-5">
+                        <div class="info mt-4 mt-lg-0">
+                             <h2 class="fsz-30px mb-40"> La Montée des Concours de Pronostics en Entreprise </h2>
+                            <div class="text fsz-14px color-666 mb-20">
+                                Les concours de pronostics en entreprise sont en plein essor ! Ces défis ludiques ont gagné en popularité parmi les employés, apportant compétition et esprit d'équipe au sein des bureaux. Préparez-vous à vivre l'excitation de ces compétitions stimulantes qui renforcent la cohésion et dynamisent l'environnement de travail !
+                            </div>
+                            <div class="btns">
+                                <a href="https://www.youtube.com/watch?v=GsftB2wWtM0" data-lity="" class="vid_link">
+                                    <i class="la la-play"></i>
+                                </a>
+                                <a href="https://www.youtube.com/watch?v=GsftB2wWtM0" class="fsz-14px fw-bold"> 
+                                    L'avenir des concours de pronostics
+
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="numbers-circles">
+                            <div class="circle-item">
+                                <div class="cont">
+                                    <p> Entreprise satisfaite </p>
+                                    <strong class="number"> <span class="counter"> 99 </span>%</strong>
+                                </div>
+                            </div>
+                            <div class="circle-item">
+                                <div class="cont">
+                                    <p> Taux de Participation </p>
+                                    <strong class="number"> <span class="counter"> 95 </span>%</strong>
+                                </div>
+                            </div>
+                            <div class="circle-item">
+                                <div class="cont">
+                                    <p> salariés épanouis </p>
+                                    <strong class="number"> <span class="counter"> 98 </span>%</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <img src="assets/img/about_page/pattern_1.png" alt="" class="pattern">
+        </section>
+        <!-- ====== end about-vision ====== -->
+
+
+        <!-- ====== start about-team ====== -->
+        <section class="tc-about-team">
+            <div class="container">
+                <div class="title text-center mb-30">
+                    <p class="fsz-13px color-999 text-uppercase mb-10"> organiser </p>
+                    <h2 class="fsz-30px"> Compétitions </h2>
+                </div>
+                <div class="contant">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="team-card">
+                                <div class="img img-cover">
+                                    <img src="assets/img/logo_afrique.png" alt="">
+                                </div>
+                                <div class="inf">
+                                    <h6> Coupe d'Afrique des Nations </h6>
+                                    <small> 13 Janvier - 11 Février  2024 </small> 
+                                    <a href="https://ccup.io/competitions" target="_blank" class="tags"> Voir plus </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="team-card">
+                                <div class="img img-cover">
+                                    <img src="assets/img/about_page/logo rugby.png" alt="">
+                                </div>
+                                <div class="inf">
+                                    <h6> Tournoi des 6 nations 2024 </h6>
+                                    <small> 2 février - 16 mars 2024</small>
+                                    <a href="https://ccup.io/competitions" target="_blank" class="tags"> Voir plus </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="team-card">
+                                <div class="img img-cover">
+                                    <img src="assets/img/about_page/logo_roland.png" alt="">
+                                </div>
+                                <div class="inf">
+                                    <h6> Roland Garros </h6>
+                                    <small> 26 mai - 09 juin 2024 </small>
+                                    <a href="https://ccup.io/competitions" target="_blank" class="tags"> Voir plus </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="team-card">
+                                <div class="img img-cover">
+                                    <img src="assets/img/about_page/logoeuro.png" alt="">
+                                </div>
+                                <div class="inf">
+                                    <h6> Euro 2024 </h6>
+                                    <small> 14 Juin - 14 Juillet 2024 </small>
+                                    <a href="https://ccup.io/competitions" target="_blank" class="tags"> Voir plus </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="team-card">
+                                <div class="img img-cover">
+                                    <img src="assets/img/about_page/logo tour .png" alt="">
+                                </div>
+                                <div class="inf">
+                                    <h6> Cyclisme Tour de France </h6>
+                                    <small> 29 Juin - 21 Juillet 2024 </small>
+                                    <a href="https://ccup.io/competitions" target="_blank" class="tags"> Voir plus </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="team-card">
+                                <div class="img img-cover">
+                                    <img src="assets/img/about_page/logo wenbeldon.png" alt="">
+                                </div>
+                                <div class="inf">
+                                    <h6> Wimbledon 2024 </h6>
+                                    <small> 1 juillet - 14 juillet 2024 </small>
+                                    <a href="https://ccup.io/competitions" target="_blank" class="tags"> Voir plus </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end about-team ====== -->
+
+
+        <!-- ====== start about-history ====== -->
+        <section class="tc-about-history">
+            <div class="container">
+                <div class="title mb-80">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <h2 class="fsz-30px text-white"> Bénéfices </h2>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="arrows justify-content-lg-end">
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="tc-about-history-slider">
+                        <div class="swiper-container overflow-visible">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <div class="history-card">
+                                        <div class="card-title mb-30">
+                                           <h5 class="fsz-22px fw-bold"> Cohésion d’équipe </h5>
+                                        </div>
+                                        <div class="text fsz-14px color-666 mb-50">
+                                            Rassemblez l’ensemble de vos collaborateurs autour d’un même évènement sportif
+                                        </div>
+                                        <a href="https://ccup.io" target="_blank"> Voir plus </a>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="history-card">
+                                        <div class="card-title mb-30">
+                                            <h5 class="fsz-22px fw-bold"> Meilleure intégration </h5>
+                                        </div>
+                                        <div class="text fsz-14px color-666 mb-50">
+                                            Créez plus d’intéractions dans votre entreprise et mettez en avant toute l'équipe
+                                        </div>
+                                        <a href="https://ccup.io" target="_blank"> Voir plus </a>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="history-card">
+                                        <div class="card-title mb-30">
+                                            <h5 class="fsz-22px fw-bold"> Fini la routine </h5>
+                                        </div>
+                                        <div class="text fsz-14px color-666 mb-50">
+                                            Profitez de cet évènement pour apporter plus de convivialité au sein de vos équipes
+                                        </div>
+                                        <a href="https://ccup.io" target="_blank"> Voir plus </a>
+                                    </div>
+                                </div>
+                                <div class="swiper-slide">
+                                    <div class="history-card">
+                                        <div class="card-title mb-30">
+                                             <h5 class="fsz-22px fw-bold"> 100% Gratifiant </h5>
+                                        </div>
+                                        <div class="text fsz-14px color-666 mb-50">
+                                            Récompensez vos collaborateurs les plus investis à travers différents challenges
+                                        </div>
+                                        <a href="https://ccup.io" target="_blank"> Voir plus </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end about-history ====== -->
+
+
+        <!-- ====== start about-team ====== -->
+        <section class="tc-about-blog">
+            <div class="container">
+                <div class="title text-center mb-30">
+                   <h2 class="fsz-30px"> Actualités Sportives </h2>
+                </div>
+                <div class="content">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="tc-post-grid-default mt-50">
+                                <div class="item">
+                                    <div class="img img-cover th-250">
+                                        <img src="assets/img/about_page/actu1.png" alt="">
+                                    </div>
+                                    <div class="content pt-20">
+                                        <a href="#" class="news-cat color-999 fsz-13px text-uppercase mb-10">Actu</a>
+                                        <h4 class="title ltspc--1 mb-10">
+                                            <a href="https://ccup.io">
+                                                Les jeux concours de pronostics vous attendent ! 
+                                            </a>
+                                        </h4>
+                                        <div class="text color-666">
+                                            Découvrez des compétitions palpitantes où vos talents de prédiction sont mis à l'épreuve [...]
+                                        </div>
+                                        <div class="meta-bot lh-1 mt-20">
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="tc-post-grid-default mt-50">
+                                <div class="item">
+                                    <div class="img img-cover th-250">
+                                        <img src="assets/img/about_page/actu2.png" alt="">
+                                    </div>
+                                    <div class="content pt-20">
+                                        <a href="#" class="news-cat color-999 fsz-13px text-uppercase mb-10">Actu</a>
+                                        <h4 class="title ltspc--1 mb-10">
+                                            <a href="https://ccup.io">
+                                                Découvrez les jeux concours de pronostics à ne pas manquer !
+                                            </a>
+                                        </h4>
+                                        <div class="text color-666">
+                                            Faites monter l'adrénaline en participant à nos jeux interactifs [...]
+                                        </div>
+                                        <div class="meta-bot lh-1 mt-20">
+                                         
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="tc-post-grid-default mt-50">
+                                <div class="item">
+                                    <div class="img img-cover th-250">
+                                        <img src="assets/img/about_page/actu3.png" alt="">
+                                    </div>
+                                    <div class="content pt-20">
+                                        <a href="#" class="news-cat color-999 fsz-13px text-uppercase mb-10">Actu</a>
+                                        <h4 class="title ltspc--1 mb-10">
+                                            <a href="https://ccup.io">
+                                                Pariez et remportez des prix excitants !
+                                            </a>
+                                        </h4>
+                                        <div class="text color-666">
+                                            Participez à nos jeux concours de pronostics pour mettre à l'épreuve vos talents de prédiction [...]
+                                        </div>
+                                        <div class="meta-bot lh-1 mt-20">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end about-team ====== -->
+
+
+        <!-- ====== start modals ====== -->
+
+        <div class="offcanvas offcanvas-start sidebar-popup-style1" tabindex="-1" id="offcanvasExample"
+            aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <div class="logo">
+                    <img src="assets/img/logo_home1.png" alt="" class="dark-none">
+                    <img src="assets/img/logo_home1_lt.png" alt="" class="light-none">
+                </div>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body mt-4">
+                <h6 class="color-000 text-uppercase mb-10 ltspc-1"> about us <i class="la la-angle-right ms-1"></i> </h6>
+                <div class="text">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem optio tempora quia iure quae. Soluta corporis quidem aperiam amet nihil.
+                </div>
+
+                <div class="sidebar-categories mt-40">
+                    <h6 class="color-000 text-uppercase mb-30 ltspc-1"> categories <i class="la la-angle-right ms-1"></i> </h6>
+                    <a href="#" class="cat-card">
+                        <div class="img img-cover">
+                            <img src="assets/img/bussines/1.png" alt="">
+                        </div>
+                        <div class="info">
+                            <h5>bussines</h5>
+                            <span class="num">12</span>
+                        </div>
+                    </a>
+                    <a href="#" class="cat-card">
+                        <div class="img img-cover">
+                            <img src="assets/img/trend/3.png" alt="">
+                        </div>
+                        <div class="info">
+                            <h5>technology</h5>
+                            <span class="num">14</span>
+                        </div>
+                    </a>
+                    <a href="#" class="cat-card">
+                        <div class="img img-cover">
+                            <img src="assets/img/must_read/3.png" alt="">
+                        </div>
+                        <div class="info">
+                            <h5>culture</h5>
+                            <span class="num">20</span>
+                        </div>
+                    </a>
+                    <a href="#" class="cat-card">
+                        <div class="img img-cover">
+                            <img src="assets/img/videos/1.png" alt="">
+                        </div>
+                        <div class="info">
+                            <h5>videos</h5>
+                            <span class="num">14</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="sidebar-contact-info mt-50">
+                    <h6 class="color-000 text-uppercase mb-20 ltspc-1"> Contact & follow <i class="la la-angle-right ms-1"></i> </h6>
+                    <ul class="m-0">
+                        <li class="mb-3">
+                            <i class="las la-map-marker me-2 color-main fs-5"></i>
+                            <a href="#">streat name 12, hollywood City, USA</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="las la-envelope me-2 color-main fs-5"></i>
+                            <a href="#">Newzin@gmail.com</a>
+                        </li>
+                        <li class="mb-3">
+                            <i class="las la-phone-volume me-2 color-main fs-5"></i>
+                            <a href="#">+12 123 456 789</a>
+                        </li>
+                    </ul>
+                    <div class="social-links">
+                        <a href="#">
+                            <i class="la la-twitter"></i>
+                        </a>
+                        <a href="#">
+                            <i class="la la-facebook-f"></i>
+                        </a>
+                        <a href="#">
+                            <i class="la la-instagram"></i>
+                        </a>
+                        <a href="#">
+                            <i class="la la-youtube"></i>
+                        </a>
+                        <a href="#">
+                            <i class="la la-spotify"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ====== end modals ====== -->
+
+    </main>
+    <!--End-Contents-->
+
+    <!-- ====== start footer ====== -->
+    <footer class="footer-style8">
+        <div class="container">
+            <div class="tc-subscribe-style8 border-1 border-bottom brd-light">
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-lg-4">
+                        <div class="sub-info">
+                            <h5>Explorez le monde du sport avec nous, une étape à la fois.</h5>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="sub-form">
+                            <div class="form-group">
+                                <span class="icon">
+                                    <i class="la la-envelope"></i>
+                                </span>
+                                <input type="text" class="form-control" placeholder="Entrez votre adresse e-mail.">
+                                <button>s'abonner</button>
+                            </div>
+                            <p class="mt-2 text-white fsz-13px fst-italic">En vous abonnant, vous acceptez notre politique de confidentialité. <a
+                                    href="#" class="text-decoration-underline fst-normal text-white">Politique</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="row gx-lg-5">
+                    <div class="col-lg-4">
+                        <div class="info">
+                            <div class="foot-logo">
+                                <img src="assets/img/logo2.png" alt="">
+                            </div>
+                            <div class="data-info">
+                                <p>
+                                    <b>Opéré par : </b> Société Iterar Network, Inc.
+                                </p>
+                                <p>
+                                    <b> Siret: </b> 88157171500013
+                                </p>
+                                <p>
+                                    <b> Adresse: </b> Avenue Charles de Gaulle, <br> 92200 Neuilly-sur-Seine
+                                </p>
+                                <p>
+                                    <b> Email : </b> contact@iterar.net
+                                </p>
+                                <p>
+                                    <b> Tél : </b> +33 1 83 79 24 54
+                                </p>
+     
+                            </div>
+
+                            <div class="social-links">
+                                <a href="https://twitter.com/ccup_io" target="_blank">
+                                    <i class="la la-twitter"></i>
+                                </a>
+                                <a href="https://www.facebook.com/ccup.io" target="_blank">
+                                    <i class="la la-facebook-f"></i>
+                                </a>
+                                <a href="https://www.instagram.com/ccup.io/" target="_blank">
+                                    <i class="la la-instagram"></i>
+                                </a>
+                                <a href="https://www.youtube.com/@ccupio" target="_blank">
+                                    <i class="la la-youtube"></i>
+                                </a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Navigation</div>
+                            <ul>
+                                <li>
+                                    <a href="#" class="f-link">Accueil</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Blog</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">À Propos</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Contact</a>
+                                </li>
+                        
+                            </ul>
+                        </div>
+               
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Tendances Actuelle</div>
+                            <ul>
+                                <li>
+                                    <a href="#" class="f-link">Pronostics</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Analyse</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Compétition</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Challenges</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Résultats</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Événements</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Communauté</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Victoires et Récompenses</a>
+                                </li>
+                            </ul>
+                        </div>
+                 
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Sport</div>
+                            <ul>
+                                <li>
+                                    <a href="#" class="f-link">Football</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Rugby</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">MMA</a>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Aide</div>
+                            <ul>
+                                <li>
+                                    <a href="#" class="f-link">Contact</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">LA communauté</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Confidentialité</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Politique</a>
+                                </li>
+                     
+                            </ul>
+                        </div>
+                        <div class="link-group">
+                         
+                    </div>
+                </div>
+            </div>
+
+            <div class="foot text-center pt-40 pb-40 border-1 border-top brd-light">
+                <p class="fsz-13px">© 2023 Droits d'auteur <a href="#" class="text-white hover-underline">Concours Pronostics Entreprise</a>. Tous droits réservés. Développé par Iterar Network.
+                     <a href="#" class="text-white hover-underline">Iterar Network</a></p>
+            </div>
+        </div>
+         <!-- ====== start to top button ====== -->
+         <a href="#" class="to_top">
+            <i class="la la-angle-up"></i>
+        </a>
+        <!-- ====== end to top button ====== -->
+                 
+        <!-- ====== start to top button ====== -->
+        <a href="#" class="to_top">
+            <i class="la la-angle-up"></i>
+        </a>
+        <!-- ====== end to top button ====== -->
+    </footer>
+    <!-- ====== end footer ====== -->
+
+    <!-- ====== start to top button ====== -->
+    <!-- <div class="progress-wrap">
+        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102"><path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 220.587;"></path></svg>
+    </div> -->
+    <!-- ====== end to top button ====== -->
+
+    <!-- ====== request ====== -->
+    <script src="assets/js/lib/jquery-3.0.0.min.js"></script>
+    <script src="assets/js/lib/jquery-migrate-3.0.0.min.js"></script>
+    <script src="assets/js/lib/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/lib/wow.min.js"></script>
+    <script src="assets/js/lib/jquery.fancybox.js"></script>
+    <script src="assets/js/lib/lity.js"></script>
+    <script src="assets/js/lib/swiper.min.js"></script>
+    <script src="assets/js/lib/jquery.waypoints.min.js"></script>
+    <script src="assets/js/lib/jquery.counterup.js"></script>
+    <script src="assets/js/lib/pace.js"></script>
+    <script src="assets/js/lib/back-to-top.js"></script>
+    <script src="assets/js/lib/parallaxie.js"></script>
+    <script src="assets/js/main.js"></script>
+
+
+</body>
+
+</html>

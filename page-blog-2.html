@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Metas -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="keywords" content="HTML5 Template Iteck Multi-Purpose themeforest" />
+    <meta name="description" content="Iteck - Multi-Purpose HTML5 Template" />
+    <meta name="author" content="" />
+
+   <!-- Title  -->
+   <title>CPE : Le blog spécialisé dans les concours de pronostics</title>
+
+   <!-- Favicon -->
+   <link rel="shortcut icon" href="assets/img/logo.png" title="Favicon" sizes="16x16" />
+
+    <!-- bootstrap 5 -->
+    <link rel="stylesheet" href="assets/css/lib/bootstrap.min.css">
+
+    <!-- font family -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- ionicons icons  -->
+    <link rel="stylesheet" href="assets/css/lib/ionicons.css">
+    <!-- line-awesome icons  -->
+    <link rel="stylesheet" href="assets/css/lib/line-awesome.css">
+    <!-- animate css  -->
+    <link rel="stylesheet" href="assets/css/lib/animate.css" />
+    <!-- fancybox popup  -->
+    <link rel="stylesheet" href="assets/css/lib/jquery.fancybox.css" />
+    <!-- lity popup  -->
+    <link rel="stylesheet" href="assets/css/lib/lity.css" />
+    <!-- swiper slider  -->
+    <link rel="stylesheet" href="assets/css/lib/swiper.min.css" />
+
+    <!-- ====== main style ====== -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <title> Newzin </title>
+</head>
+
+<body class="home-style1 tc-blog-page">
+
+    <!-- ====== start loading page ====== -->
+    <div id="preloader">
+    </div>
+    <!-- ====== end loading page ====== -->
+
+     <!-- ====== start navbar-container ====== -->
+     <div class="navbar-container">
+        <div class="container">
+           <!-- ====== start top navbar ====== -->
+<div class="top-navbar style-1">
+<div class="container p-0">
+    <div class="row align-items-center">
+        <div class="col-lg-4">
+            <div class="date-weather mb-3 mb-lg-0">
+                <div class="row align-items-center">
+                    <div class="col-6">
+                        <div class="item">
+                            <div class="icon me-3 pt-1">
+                                <i class="la la-calendar"></i>
+                            </div>
+                            <div class="inf">
+                                <strong id="current-date">Lundi</strong> <!-- Date actuelle mise à jour ici -->
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="item" id="weather-info">
+                            <!-- Les informations météorologiques seront mises à jour ici -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <a href="index.html" target="_blank" class="logo-brand d-none d-lg-block">
+                <img src="assets/img/logo.png" class="dark-none">
+                <img src="assets/img/logo2.png" alt="" class="light-none">
+            </a>
+        </div>
+        <div class="col-lg-4">
+            <div class="sub-darkLight">
+                <div class="row text-end align-items-center">
+                    <div class="col-6">
+                        <a href="https://ccup.io/commander" target="_blank" class="text-uppercase fs-6 border-bottom border-1 border-dark">
+                            <i class="fas fa-dollar-sign fs-5 me-1"></i>
+                            un devis ?
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <div class="darkLight-btn">
+                            <span class="icon active" id="light-icon">
+                                <i class="la la-sun"></i>
+                            </span>
+                            <span class="icon" id="dark-icon">
+                                <i class="la la-moon"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Code du calendrier -->
+<div id="calendar"></div>
+
+<!-- Code des informations météorologiques -->
+<div class="col-6">
+<div class="item" id="weather-info">
+    <!-- Les informations météorologiques seront mises à jour ici -->
+</div>
+</div>
+
+<!-- Scripts pour le calendrier et les informations météorologiques -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js"></script>
+<script>
+function updateCurrentDate() {
+const currentDateElement = document.getElementById('current-date');
+const today = new Date(); // Obtenir la date et l'heure actuelles
+const options = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' };
+currentDateElement.textContent = today.toLocaleDateString('fr-FR', options);
+}
+
+// Appel initial pour mettre à jour la date
+updateCurrentDate();
+
+// Mise à jour de la date chaque jour à minuit (00:00:00)
+function setDailyUpdate() {
+const now = new Date();
+const timeUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) - now;
+setTimeout(function() {
+    updateCurrentDate();
+    setDailyUpdate(); // Répéter pour le prochain jour
+}, timeUntilMidnight);
+}
+
+setDailyUpdate(); // Démarrer la mise à jour quotidienne
+
+function fetchWeather() {
+const apiKey = 'd0e7851a2ef56e995b3676226ba79eef';
+const city = 'Paris';
+const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+        const temperature = data.main.temp;
+        const conditions = data.weather[0].description;
+
+        const weatherInfoElement = document.getElementById('weather-info');
+        weatherInfoElement.innerHTML = `
+            <div class="icon me-3 pt-1">
+                <i class="la la-cloud-sun"></i>
+            </div>
+            <div class="inf">
+                <strong>${temperature}°, ${conditions}</strong>
+                <p>${city}</p>
+            </div>
+        `;
+    })
+    .catch(error => {
+        console.error('Erreur lors de la récupération des données météo', error);
+    });
+}
+
+// Rafraîchir toutes les 10 minutes (600000 ms)
+setInterval(fetchWeather, 600000);
+
+// Appel initial
+fetchWeather();
+</script>
+<!-- ====== end top navbar ====== -->
+
+
+
+            <!-- ====== start navbar ====== -->
+            <nav class="navbar navbar-expand-lg navbar-light style-1">
+                <div class="container p-0">
+                    <div class="mob-nav-toggles d-flex align-items-center justify-content-between">
+                        <button class="navbarList-icon me-lg-5" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+                        aria-controls="offcanvasExample">
+                            <span></span>
+                            <span></span>
+                        </button>
+                        <a href="#" class="logo-brand d-block d-lg-none w-50 my-4">
+                            <img src="assets/img/logo_home1.png" alt="" class="dark-none">
+                            <img src="assets/img/logo_home1_lt.png" alt="" class="light-none">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item dropdown">
+                                <a href="index.html" target="_blank" class="nav-link">
+                                    accueil
+                                </a>
+                                
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="page-blog-2.html" target="_blank" class="nav-link">
+                                    Blog
+                                </a>
+                                
+                            </li>
+                            
+                            <li class="nav-item dropdown">
+                                <a href="page-about.html" target="_blank" class="nav-link">
+                                    À propos
+                                </a>
+                                
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="page-contact.html">
+                                    contact
+                                </a>
+                            </li>
+                            
+                        </ul>
+                        
+                    </div>
+                </div>
+            </nav>
+            <!-- ====== end navbar ====== -->
+
+            
+        </div>
+    </div>
+    <!-- ====== start navbar-container ====== -->
+
+    
+    <!-- ====== end nav search ====== -->
+
+    <!--Contents-->
+    <main>
+
+        <!-- ====== start features posts ====== -->
+        <section class="features-posts pt-50 pb-50 bg-gray1">
+            <div class="container">
+                <div class="">
+                    <div class="row">
+                        <div class="col-lg-6 border-1 border-end brd-gray">
+                            <div class="tc-post-overlay-default mb-30 mb-lg-0">
+                                <div class="img th-600 img-cover">
+                                    <img src="assets/img/cdm18.png" alt="">
+                                    <div class="tags">
+                                        <a href="l-epopee-de-l-equipe-de-france-a-la-cdm-2018.html">Nouveautés</a>
+                                        
+                                    </div>
+                                </div>
+                                <div class="content ps-30 pe-30 pb-30">
+                                    <h2 class="title mb-20">
+                                        <a href="l-epopee-de-l-equipe-de-france-a-la-cdm-2018.html">L'épopée de l'équipe de France à la CDM 2018</a>
+                                    </h2>
+                                    <div class="text">
+                                        L'équipe de France a brillamment triomphé lors de la Coupe du Monde 2018 en Russie, démontrant une cohésion exceptionnelle et un jeu dynamique qui les a conduits à soulever le trophée tant convoité [...]
+                                    </div>
+                                    <div class="meta-bot lh-1 mt-40">
+                                        <ul class="d-flex">
+                                            <li class="date me-5">
+                                                <a href="#"><i class="la la-calendar me-2"></i> Dec 14,
+                                                    2022</a>
+                                            </li>
+                                            <li class="author me-5">
+                                                <a href="#"><i class="la la-user me-2"></i> by Admin</a>
+                                            </li>
+                                           
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="tc-post-overlay-default">
+                                <div class="img th-600 img-cover">
+                                    <img src="assets/img/blackrugby.png" alt="">
+                                    <div class="tags">
+                                        <a href="legendes-du-rugby-et-symboles-de-la-nouvelle-zelande.html">Nouveautés</a>
+                                        
+                                    </div>
+                                </div>
+                                <div class="content ps-30 pe-30 pb-30">
+                                    <h2 class="title mb-20">
+                                        <a href="legendes-du-rugby-et-symboles-de-la-nouvelle-zelande.html">Légendes du rugby et symbole de la Nouvelle-Zélande</a>
+                                    </h2>
+                                    <div class="text">
+                                        Considérés comme de véritables légendes du rugby, les joueurs emblématiques de la Nouvelle-Zélande incarnent l'esprit du sport et la fierté nationale, portant haut les valeurs de l'équipe des All Blacks à travers leurs performances exceptionnelles sur le terrain [...]
+                                    <div class="meta-bot lh-1 mt-40">
+                                        <ul class="d-flex">
+                                            <li class="date me-5">
+                                                <a href="#"><i class="la la-calendar me-2"></i> Dec 14,
+                                                    2022</a>
+                                            </li>
+                                            <li class="author me-5">
+                                                <a href="#"><i class="la la-user me-2"></i> by Admin</a>
+                                            </li>
+                                           
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end features posts ====== -->
+
+        <!-- ====== start popular posts ====== -->
+        <section class="tc-popular-posts-blog">
+            <div class="container">
+                <div class="content pt-50 pb-50 border-1 border-bottom brd-gray">
+                    <div class="tc-post-grid-default">
+                        
+                    </div>
+                </div>
+                <div class="content-widgets pt-50 pb-50">
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <div class="tc-post-list-style3">
+                                <div class="items">
+                                    <div class="item">
+                                        <div class="row">
+                                            <div class="col-lg-5">
+                                                <div class="img th-230 img-cover overflow-hidden">
+                                                    <img src="assets/img/lakers2.png" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <div class="content mt-20 mt-lg-0">
+                                                    <a href="#"
+                                                        class="color-999 fsz-13px text-uppercase mb-10">sport</a>
+                                                    <h4 class="title mb-15"> <a href="previsions-de-la-cote-de-match-entre-les-lakers-et-les-nets.html">Prévisions de la cote de match entre les Lakers et les Nets
+                                                            </a> </h4>
+                                                    <div class="text color-666">
+                                                        Les prévisions de la cote de match entre les Lakers et les Nets sont chargées d'anticipation alors que deux des équipes les plus talentueuses de la ligue s'apprêtent à s'affronter, laissant présager un affrontement électrisant sur le parquet [...]
+                                                    </div>
+                                                    <div class="meta-bot fsz-13px color-666">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="#"><i class="la la-calendar me-2"></i> Aug 21,
+                                                                    2023</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="#"><i class="la la-user me-2"></i> by <span
+                                                                        class="color-000">Logan</span> </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="#"><i class="la la-comment me-2"></i> 0
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="row">
+                                            <div class="col-lg-5">
+                                                <div class="img th-230 img-cover overflow-hidden">
+                                                    <img src="assets/img/ufc.jpg" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <div class="content mt-20 mt-lg-0">
+                                                    <a href="#"
+                                                        class="color-999 fsz-13px text-uppercase mb-10">sport</a>
+                                                    <h4 class="title mb-15"> <a href="analyse-du-combat-explosif-entre-khamzat-chimaev-et-paulo-costa.html"> Analyse du combat explosif entre Khamzat Chimaev et Paulo Costa
+                                                            </a> </h4>
+                                                    <div class="text color-666">
+                                                        Le combat explosif entre Khamzat Chimaev et Paulo Costa promet d'être un affrontement épique, opposant la redoutable habileté au sol de Chimaev à la puissance dévastatrice de Costa debout, laissant les fans en attente d'un spectacle mémorable [...]
+                                                    </div>
+                                                    <div class="meta-bot fsz-13px color-666">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="#"><i class="la la-calendar me-2"></i> Aug 21,
+                                                                    2023</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="#"><i class="la la-user me-2"></i> by <span
+                                                                        class="color-000">Logan</span> </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="#"><i class="la la-comment me-2"></i> 0
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tc-post-grid-default pb-40">
+                                <div class="item pt-30">
+                                    <div class="img img-cover th-575">
+                                        <img src="assets/img/pourcentage.jpg" alt="">
+
+                                    </div>
+                                    <div class="content pt-30">
+                                        <a href="#" class="news-cat color-999 fsz-13px text-uppercase mb-10">teambuilding</a>
+                                        <h2 class="title mb-20">
+                                            <a href="les-salaries-en-entreprise-ont-tranche-decouvrez-l-equipe-favorite-entre-france-et-argentine.html" class=" fsz-35px lh-3">
+                                                Les salariés en entreprise ont tranché Découvrez l'équipe favorite entre France et Argentine 
+                                            </a>
+                                        </h2>
+                                        <div class="text color-666">
+                                            Dans cet article, nous vous dévoilons le pourcentage de l'équipe favorite basé sur des données statistiques, ainsi que les facteurs clés ayant influencé les pronostics et le déroulement de cette rencontre passionnante [...]
+                                        </div>
+                                        <div class="meta-bot lh-1 mt-40">
+                                            <ul class="d-flex">
+                                                <li class="date me-5">
+                                                    <a href="#"><i class="la la-calendar me-2"></i> Aug 21, 2023</a>
+                                                </li>
+                                                <li class="author me-5">
+                                                    <a href="#"><i class="la la-user me-2"></i> by <span
+                                                            class="color-000">Logan</span> </a>
+                                                </li>
+                                
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ====== start banner20 ====== -->
+                            <div class="banner20 border-1 border-top border-bottom brd-gray pt-40 pb-40">
+                                <div class="content">
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-10">
+                                            <a href="https://ccup.io" class="d-block img-cover">
+                                                <img src="assets/img/banniere2.png" alt="">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tc-post-list-style3">
+                                <div class="items">
+                                    <div class="item mt-30">
+                                        <div class="row">
+                                            <div class="col-lg-5">
+                                                <div class="img th-230 img-cover overflow-hidden">
+                                                    <img src="assets/img/event1.png" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <div class="content mt-20 mt-lg-0">
+                                                    <a href="#"
+                                                        class="color-999 fsz-13px text-uppercase mb-10">sport</a>
+                                                    <h4 class="title fw-bold">
+                                                        <a href="tournoi-des-six-nations-2024.html" class="hover-underline">
+                                                            Tournoi des Six-Nations
+                                                        </a>
+                                                    </h4>
+                                                    <div class="text color-666 mt-20">
+                                                        Le Tournoi des Six Nations demeure un rendez-vous emblématique du rugby international, réunissant les nations européennes dans une compétition intense et captivante chaque année [...]  
+                                                    </div>
+                                                    <div class="meta-bot fsz-13px color-666">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="#"><i class="la la-calendar me-2"></i> Aug 21,
+                                                                    2023</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="#"><i class="la la-user me-2"></i> by <span
+                                                                        class="color-000">Logan</span> </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="#"><i class="la la-comment me-2"></i> 0
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  
+                                    <div class="item mt-30 border-top">
+                                        <div class="row">
+                                            <div class="col-lg-5">
+                                                <div class="img th-230 img-cover overflow-hidden">
+                                                    <img src="assets/img/event2.png" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <div class="content mt-20 mt-lg-0">
+                                                    <a href="#"
+                                                        class="color-999 fsz-13px text-uppercase mb-10">sport</a>
+                                                    <h4 class="title fw-bold">
+                                                        <a href="roland-garros-2024.html" class="hover-underline">
+                                                            Roland-Garros 2024
+                                                        </a>
+                                                    </h4>
+                                                    <div class="text color-666 mt-20">
+                                                        L'édition tant attendue de Roland-Garros 2024 promet de rassembler les plus grands noms du tennis mondial sur la terre battue emblématique de Paris, offrant aux amateurs de sport des moments de passion et de suspense inoubliables [...]
+                                                    </div>
+                                                    <div class="meta-bot fsz-13px color-666">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="#"><i class="la la-calendar me-2"></i> Aug 21,
+                                                                    2023</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="#"><i class="la la-user me-2"></i> by <span
+                                                                        class="color-000">Logan</span> </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="#"><i class="la la-comment me-2"></i> 0
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <div class="row">
+                                            <div class="col-lg-5">
+                                                <div class="img th-230 img-cover overflow-hidden">
+                                                    <img src="assets/img/event3.png" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <div class="content mt-20 mt-lg-0">
+                                                    <a href="#"
+                                                        class="color-999 fsz-13px text-uppercase mb-10">sport</a>
+                                                    <h4 class="title fw-bold">
+                                                        <a href="les-epreuves-d-athletisme-jo-2024.html" class="hover-underline">
+                                                            Les épreuves d'athlétisme JO 2024
+                                                        </a>
+                                                    </h4>
+                                                    <div class="text color-666 mt-20">
+                                                        Les épreuves d'athlétisme des Jeux Olympiques 2024 suscitent une forte anticipation alors que les athlètes du monde entier s'apprêtent à converger vers Paris pour rivaliser dans une variété de disciplines, mettant en avant la détermination et le talent exceptionnel de la communauté sportive mondiale [...]
+                                                    </div>
+                                                    <div class="meta-bot fsz-13px color-666">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="#"><i class="la la-calendar me-2"></i> Aug 21,
+                                                                    2023</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="#"><i class="la la-user me-2"></i> by <span
+                                                                        class="color-000">Logan</span> </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="#"><i class="la la-comment me-2"></i> 0
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item border-0">
+                                        <div class="row">
+                                            <div class="col-lg-5">
+                                                <div class="img th-230 img-cover overflow-hidden">
+                                                    <img src="assets/img/event4.png" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <div class="content mt-20 mt-lg-0">
+                                                    <a href="#"
+                                                        class="color-999 fsz-13px text-uppercase mb-10">sport</a>
+                                                    <h4 class="title fw-bold">
+                                                        <a href="championnat-du-monde-de-formule-1-2024.html" class="hover-underline">
+                                                            Championnat du monde de Formule 1 2024
+                                                        </a>
+                                                    </h4>
+                                                    <div class="text color-666 mt-20">
+                                                        Le Championnat du Monde de Formule 1 2024 s'annonce palpitant alors que les écuries et les pilotes se préparent à se battre pour la suprématie sur les circuits mondiaux, offrant aux fans une saison de courses haute vitesse, d'adrénaline et de rivalités intenses [...]
+                                                    </div>
+                                                    <div class="meta-bot fsz-13px color-666">
+                                                        <ul class="d-flex">
+                                                            <li class="date me-5">
+                                                                <a href="#"><i class="la la-calendar me-2"></i> Aug 21,
+                                                                    2023</a>
+                                                            </li>
+                                                            <li class="author me-5">
+                                                                <a href="#"><i class="la la-user me-2"></i> by <span
+                                                                        class="color-000">Logan</span> </a>
+                                                            </li>
+                                                            <li class="comment">
+                                                                <a href="#"><i class="la la-comment me-2"></i> 0
+                                                                    Comments</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="widgets-sticky mt-5 mt-lg-0">
+                                <p class="color-000 text-uppercase mb-30"> Restez Connecté </p>
+                                <!-- widget-social -->
+                                <div class="tc-widget-social-style5 mb-40">
+                                    <a href="https://www.facebook.com/ccup.io" target="_blank" class="social-card">
+                                        <div class="icon facebook-icon">
+                                            <i class="lab la-facebook-f"></i>
+                                        </div>
+                                        <div class="cont">
+                                            <strong> <b class="counter">317</b></strong>
+                                            <span>Followers</span>
+                                        </div>
+                                    </a>
+                                    <a href="https://twitter.com/ccup_io" target="_blank" class="social-card">
+                                        <div class="icon twitter-icon">
+                                            <i class="lab la-twitter"></i>
+                                        </div>
+                                        <div class="cont">
+                                            <strong> <b class="counter">247</b></strong>
+                                            <span>Followers</span>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.instagram.com/ccup.io/" target="_blank" class="social-card">
+                                        <div class="icon insta-icon">
+                                            <i class="lab la-instagram"></i>
+                                        </div>
+                                        <div class="cont">
+                                            <strong> <b class="counter">91</b></strong>
+                                            <span>Followers</span>
+                                        </div>
+                                    </a>
+                                    <a href="https://www.youtube.com/@ccupio" target="_blank" class="social-card border-0 pb-0">
+                                        <div class="icon youtube-icon">
+                                            <i class="lab la-youtube"></i>
+                                        </div>
+                                        <div class="cont">
+                                            <strong> <b class="counter">432</b></strong>
+                                            <span>S'abonner</span>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <!-- widget-trends -->
+                                <div class="tc-trending-news-style5 border border-1 brd-gray mb-40">
+                                    <p class="color-000 text-uppercase p-15">Infos Mercato</p>
+                                    <div class="tc-post-list-style1">
+                                        <div class="tc-post-overlay-default">
+                                            <div class="img th-200 img-cover">
+                                                <img src="assets/img/mercato.png" alt="">
+                                            </div>
+                                            <div class="content ps-20 pe-20 pb-20 text-white">
+                                                <a href="#" class="text-uppercase fsz-13px mb-1">mercato</a>
+                                                <h4 class="title">
+                                                    <a href="kylian-mbappe-quitte-le-psg.html">Kylian Mbappé quitte le PSG</a>
+                                                </h4>
+                                            </div>
+                                        </div>
+                                        <div class="items px-4 py-2">
+                                            <div class="item">
+                                                <h2 class="num">
+                                                    2
+                                                </h2>
+                                                <div class="content">
+                                                    <a href="#" class="color-999 fsz-12px text-uppercase mb-1">sport</a>
+                                                    <h6 class="title fsz-16px fw-bold ltspc--1 hover-main">
+                                                        <a href="neymar-rejoint-al-hilal-football-club-en-arabie-saoudite.html" class="">Star du football rejoint un nouveau club</a>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <h2 class="num">
+                                                    3
+                                                </h2>
+                                                <div class="content">
+                                                    <a href="#" class="color-999 fsz-12px text-uppercase mb-1">sport</a>
+                                                    <h6 class="title fsz-16px fw-bold ltspc--1 hover-main">
+                                                        <a href="club-europeen-en-quete-de-renforts.html" class="">“Club européen en quête de renforts
+                                                            </a>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <h2 class="num">
+                                                    4
+                                                </h2>
+                                                <div class="content">
+                                                    <a href="#" class="color-999 fsz-12px text-uppercase mb-1">sport</a>
+                                                    <h6 class="title fsz-16px fw-bold ltspc--1 hover-main">
+                                                        <a href="negociations-tendues-pour-la-pepite-du-football.html" class="">Négociations tendues pour la pépite du football</a>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                            <a href="page-blog-2.html" class="fsz-13px text-capitalize color-666 mt-30 mb-20">
+                                                <span>Voir plus</span>
+                                                <i class="las la-angle-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- widget-sponsored -->
+                                <div class="tc-widget-sponsored-style1">
+                                    <div class="img img-cover">
+                                        <img src="assets/img/interview.png" alt="">
+                                    </div>
+                                    <div class="info">
+                                        <div class="spon-cat text-uppercase mt-20">  04/11/2022 </div>
+                                        <h6 class="title">
+                                            <a href="https://www.youtube.com/watch?v=UBaAcUfNL8E">
+                                                Karim Benzema : l'interview intégrale XXL
+    
+                                            </a>
+                                        </h6>
+                                        <a href="https://www.youtube.com/watch?v=UBaAcUfNL8E">
+                                            <small>voir plus <i
+                                                    class="las la-external-link-square-alt ms-2"></i></small>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                
+
+                                <!-- widget-adbox -->
+                                <div class="tc-widget-adbox-style1">
+                                    <a href="https://ccup.io" class="img">
+                                        <img src="assets/img/banniere5.png" alt="" class="">
+                                    </a>
+                                </div>
+
+                                
+                              
+
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- ====== end popular posts ====== -->
+
+      
+
+    </main>
+    <!--End-Contents-->
+
+    <!-- ====== start footer ====== -->
+    <footer class="footer-style8">
+        <div class="container">
+            <div class="tc-subscribe-style8 border-1 border-bottom brd-light">
+                <div class="row justify-content-between align-items-center">
+                    <div class="col-lg-4">
+                        <div class="sub-info">
+                            <h5>Explorez le monde du sport avec nous, une étape à la fois.</h5>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="sub-form">
+                            <div class="form-group">
+                                <span class="icon">
+                                    <i class="la la-envelope"></i>
+                                </span>
+                                <input type="text" class="form-control" placeholder="Entrez votre adresse e-mail.">
+                                <button>s'abonner</button>
+                            </div>
+                            <p class="mt-2 text-white fsz-13px fst-italic">En vous abonnant, vous acceptez notre politique de confidentialité. <a
+                                    href="#" class="text-decoration-underline fst-normal text-white">Politique</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="row gx-lg-5">
+                    <div class="col-lg-4">
+                        <div class="info">
+                            <div class="foot-logo">
+                                <img src="assets/img/logo2.png" alt="">
+                            </div>
+                            <div class="data-info">
+                                <p>
+                                    <b>Opéré par : </b> Société Iterar Network, Inc.
+                                </p>
+                                <p>
+                                    <b> Siret: </b> 88157171500013
+                                </p>
+                                <p>
+                                    <b> Adresse: </b> Avenue Charles de Gaulle, <br> 92200 Neuilly-sur-Seine
+                                </p>
+                                <p>
+                                    <b> Email : </b> contact@iterar.net
+                                </p>
+                                <p>
+                                    <b> Tél : </b> +33 1 83 79 24 54
+                                </p>
+     
+                            </div>
+
+                            <div class="social-links">
+                                <a href="https://twitter.com/ccup_io" target="_blank">
+                                    <i class="la la-twitter"></i>
+                                </a>
+                                <a href="https://www.facebook.com/ccup.io" target="_blank">
+                                    <i class="la la-facebook-f"></i>
+                                </a>
+                                <a href="https://www.instagram.com/ccup.io/" target="_blank">
+                                    <i class="la la-instagram"></i>
+                                </a>
+                                <a href="https://www.youtube.com/@ccupio" target="_blank">
+                                    <i class="la la-youtube"></i>
+                                </a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Navigation</div>
+                            <ul>
+                                <li>
+                                    <a href="#" class="f-link">Accueil</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Blog</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">À Propos</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Contact</a>
+                                </li>
+                        
+                            </ul>
+                        </div>
+               
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Tendances Actuelle</div>
+                            <ul>
+                                <li>
+                                    <a href="#" class="f-link">Pronostics</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Analyse</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Compétition</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Challenges</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Résultats</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Événements</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Communauté</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Victoires et Récompenses</a>
+                                </li>
+                            </ul>
+                        </div>
+                 
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Sport</div>
+                            <ul>
+                                <li>
+                                    <a href="#" class="f-link">Football</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Rugby</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">MMA</a>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="link-group">
+                            <div class="title">Aide</div>
+                            <ul>
+                                <li>
+                                    <a href="#" class="f-link">Contact</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">LA communauté</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Confidentialité</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="f-link">Politique</a>
+                                </li>
+                     
+                            </ul>
+                        </div>
+                        <div class="link-group">
+                         
+                    </div>
+                </div>
+            </div>
+
+            <div class="foot text-center pt-40 pb-40 border-1 border-top brd-light">
+                <p class="fsz-13px">© 2023 Droits d'auteur <a href="#" class="text-white hover-underline">Concours Pronostics Entreprise</a>. Tous droits réservés. Développé par Iterar Network.
+                     <a href="#" class="text-white hover-underline">Iterar Network</a></p>
+            </div>
+        <!-- ====== start to top button ====== -->
+        <a href="#" class="to_top">
+            <i class="la la-angle-up"></i>
+        </a>
+        <!-- ====== end to top button ====== -->
+    </footer>
+    <!-- ====== end footer ====== -->
+
+    <!-- ====== start to top button ====== -->
+    <!-- <div class="progress-wrap">
+        <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102"><path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 220.587;"></path></svg>
+    </div> -->
+    <!-- ====== end to top button ====== -->
+
+    <!-- ====== request ====== -->
+    <script src="assets/js/lib/jquery-3.0.0.min.js"></script>
+    <script src="assets/js/lib/jquery-migrate-3.0.0.min.js"></script>
+    <script src="assets/js/lib/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/lib/wow.min.js"></script>
+    <script src="assets/js/lib/jquery.fancybox.js"></script>
+    <script src="assets/js/lib/lity.js"></script>
+    <script src="assets/js/lib/swiper.min.js"></script>
+    <script src="assets/js/lib/jquery.waypoints.min.js"></script>
+    <script src="assets/js/lib/jquery.counterup.js"></script>
+    <script src="assets/js/lib/pace.js"></script>
+    <script src="assets/js/lib/back-to-top.js"></script>
+    <script src="assets/js/lib/parallaxie.js"></script>
+    <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
